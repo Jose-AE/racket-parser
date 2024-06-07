@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center"><img  width="200" height="200" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Racket-logo.svg"></div>
+<h1 align="center">Racker Parser</h1>
 
-## Getting Started
+<h2>About</h2>
+WIP
 
-First, run the development server:
+<h2>Installation</h2>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Make sure you have the following prerequisites installed on your system:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Docker](https://www.docker.com/)
+- [Git](https://git-scm.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Steps
 
-## Learn More
+1. **Clone the Repository**
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone https://github.com/Jose-AE/racket-parser.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Navigate to the Project Directory**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   cd racket-parser
+   ```
 
-## Deploy on Vercel
+3. **Run Container**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Use Docker Compose to spin up the necessary container:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   docker-compose up
+   ```
+
+4. **Access Webapp**
+
+   Once the containers are up and running, you can access the application at:
+
+   [http://localhost:3000](http://localhost:3000)
+
+<h2>Credits</h2>
+WIP
+
+<h2>Copyright</h2>
+This project is licensed under the terms of the GNU General Public v3.0 License. See <a href="LICENSE">license</a>

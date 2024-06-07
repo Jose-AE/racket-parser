@@ -1,0 +1,6 @@
+services: #"Components" that form the app (names can be anything )
+  racket-parser:
+    build: ./ #Build image from dockerfile inside frontend folder
+    ports:
+      - 3000:3000 #map port 5173 on the container to port 5173 on PC
+

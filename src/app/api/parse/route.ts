@@ -1,37 +1,32 @@
 import * as fs from "fs";
 import { exec } from "child_process";
+import { promisify } from "util";
 
-function createTxtFile(filename: string, content: string): void {
-  fs.writeFile(filename, content, (err) => {
-    if (err) {
-      console.error("Error occurred:", err);
-      return;
-    }
-    console.log(`${filename} has been created successfully!`);
-  });
-}
+const execAsync = promisify(exec);
+const writeFileAsync = promisify(fs.writeFile);
 
-export async function POST() {
-  createTxtFile("input/test.txt", "hola");
+export async function POST(req: Request) {
+  const { code } = await req.json();
 
-  return Response.json({ data: "hello" });
-}
+  try {
+    await writeFileAsync("./src/racket/input/source_code.txt", code);
+    console.log(`Source code has been created successfully!`);
+  } catch (error) {
+    console.error("Error occurred:", error);
+  }
 
-export async function GET(req: Request) {
-  let html = ``;
+  try {
+    const { stdout, stderr } = await execAsync("racket src/racket/parser.rkt");
 
-  exec("racket src/racket/parser.rkt", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing Racket program: ${error}`);
-      return;
-    }
     if (stderr) {
       console.error(`Racket program encountered an error: ${stderr}`);
-      return;
+      return Response.json({ error: stderr }, { status: 500 });
     }
-    html += stdout;
-    console.log(`Output from Racket program:\n${stdout}`);
-  });
 
-  return Response.json({ html });
+    //console.log(`Output from Racket program:\n${stdout}`);
+    return Response.json({ html: stdout.replace("\n", "") });
+  } catch (error: any) {
+    console.error(`Error executing Racket program: ${error}`);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
 }
