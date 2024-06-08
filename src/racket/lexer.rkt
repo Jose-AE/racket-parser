@@ -1,0 +1,118 @@
+#lang racket
+(require parser-tools/lex)
+(require (prefix-in : parser-tools/lex-sre))
+
+(define-tokens literal-tokens (NUMBER STRING))
+(define-tokens identifier-tokens (IDENTIFIER))
+
+(define-empty-tokens keyword-tokens (IF ELSE FOR WHILE DO SWITCH CASE DEFAULT BREAK CONTINUE RETURN))
+(define-empty-tokens type-tokens (INT CHAR FLOAT DOUBLE VOID))
+
+(define-empty-tokens expression-operator-tokens (PLUS MINUS INCREMENT DECREMENT))
+(define-empty-tokens term-operator-tokens
+                     (MULTIPLY DIVIDE
+                               ASSIGNMENT
+                               EQUAL
+                               NOT_EQUAL
+                               LESS_THAN
+                               GREATER_THAN
+                               LESS_THAN_OR_EQUAL
+                               GREATER_THAN_OR_EQUAL
+                               AND
+                               OR))
+
+(define-empty-tokens punctuation-tokens
+                     (COLON SEMICOLON
+                            COMMA
+                            DOT
+                            LEFT_BRACE
+                            RIGHT_BRACE
+                            LEFT_BRACKET
+                            RIGHT_BRACKET
+                            LEFT_PAREN
+                            RIGHT_PAREN
+                            EOF))
+
+(define-tokens comment-tokens (SINGLE_LINE_COMMENT MULTI_LINE_COMMENT))
+
+(define lex
+  (lexer-src-pos
+   ;COMMENTS
+   [(:seq "/*" (:* (:~ #\*)) "*/") (token-MULTI_LINE_COMMENT lexeme)]
+   [(:seq "//" (:* (:~ #\newline)) #\newline) (token-SINGLE_LINE_COMMENT lexeme)]
+   ;WHITESPACE
+   [whitespace (return-without-pos (lex input-port))]
+   ;KEYWORDS
+   ["if" (token-IF)]
+   ["else" (token-ELSE)]
+   ["for" (token-FOR)]
+   ["while" (token-WHILE)]
+   ["do" (token-DO)]
+   ["switch" (token-SWITCH)]
+   ["case" (token-CASE)]
+   ["default" (token-DEFAULT)]
+   ["break" (token-BREAK)]
+   ["continue" (token-CONTINUE)]
+   ["return" (token-RETURN)]
+   ;TYPES
+   ["int" (token-INT)]
+   ["char" (token-CHAR)]
+   ["float" (token-FLOAT)]
+   ["double" (token-DOUBLE)]
+   ["void" (token-VOID)]
+   ;OPERATORS
+   ["+" (token-PLUS)]
+   ["-" (token-MINUS)]
+   ["++" (token-INCREMENT)]
+   ["--" (token-DECREMENT)]
+   ["*" (token-MULTIPLY)]
+   ["/" (token-DIVIDE)]
+   ["=" (token-ASSIGNMENT)]
+   ["==" (token-EQUAL)]
+   ["!=" (token-NOT_EQUAL)]
+   ["<" (token-LESS_THAN)]
+   [">" (token-GREATER_THAN)]
+   ["<=" (token-LESS_THAN_OR_EQUAL)]
+   [">=" (token-GREATER_THAN_OR_EQUAL)]
+   ["&&" (token-AND)]
+   ["||" (token-OR)]
+   ;PUNCTUATION
+   [":" (token-COLON)]
+   [";" (token-SEMICOLON)]
+   ["(" (token-LEFT_PAREN)]
+   [")" (token-RIGHT_PAREN)]
+   ["[" (token-LEFT_BRACKET)]
+   ["]" (token-RIGHT_BRACKET)]
+   ["{" (token-LEFT_BRACE)]
+   ["}" (token-RIGHT_BRACE)]
+   ["." (token-DOT)]
+   ["," (token-COMMA)]
+   ;STRING LITERAL
+   [(:seq #\" (:* (:~ #\")) #\") (token-STRING lexeme)]
+   ;NUMBER LITERAL
+   [(:seq (:+ numeric) (:? (:seq #\. (:* numeric)))) (token-NUMBER (string->number lexeme))]
+   ;IDENTIFIERS
+   [(:seq (:or alphabetic #\_) (:* (union alphabetic numeric #\_))) (token-IDENTIFIER lexeme)]
+   ;EOF
+   [(eof) (token-EOF)]))
+
+;exports
+(provide literal-tokens)
+(provide identifier-tokens)
+(provide keyword-tokens)
+(provide type-tokens)
+(provide expression-operator-tokens)
+(provide term-operator-tokens)
+(provide punctuation-tokens)
+(provide comment-tokens)
+(provide lex)
+
+;print tokens
+
+(define sample-input "void main(){}")
+
+(define (get-tokens a-lexer)
+  (define p (open-input-string sample-input))
+  (list (a-lexer p) (a-lexer p) (a-lexer p) (a-lexer p) (a-lexer p)))
+
+(get-tokens lex)
