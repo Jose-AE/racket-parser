@@ -135,35 +135,27 @@
 
 (define (sep str)
   (regexp-split #rx"(?<=\\]|\\[|(\r\n)|[+-/()<>{}=;: ])|(?=\\]|\\[|(\r\n)|[+-/()<>{}=;: ])" str))
-
+  
 (define (surroundRegexp s1)
   (cond
-    [(regexp-match #rx"[0-9]+" s1)
-     (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
-    [(regexp-match #rx"\\." s1)
-     (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
-    [(regexp-match #rx"[><*=/+-]" s1)
-     (set! s1 (string-append "<span style=\"color: #ff7f00;\">" s1 "</span>"))]
-    [(regexp-match #rx"^else$|^if$" s1)
-     (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
-    [(regexp-match #rx"^for$|^while$" s1)
-     (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
-    [(regexp-match #rx"\".*\"" s1)
-     (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
-    [(regexp-match #rx"(?<=\")(?=.)" s1)
-     (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
+    [(regexp-match #rx"[0-9]+|^int$" s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
+    [(regexp-match #rx"\\." s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
+    [(regexp-match #rx"[><*=/+-]" s1) (set! s1 (string-append "<span style=\"color: #ff7f00;\">" s1 "</span>"))]
+    [(regexp-match #rx"^else$|^if$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
+    [(regexp-match #rx"^for$|^while$|^switch$|^do$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
+    [(regexp-match #rx"\".*\"" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
+    [(regexp-match #rx"(?<=\")(?=.)" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
     [(regexp-match #rx"(?<=.)(?=\")" s1) (set! s1 (string-append s1 "</span>"))]
-    [(regexp-match #rx"(?<=')(?=.)" s1)
-     (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
+    [(regexp-match #rx"(?<=')(?=.)" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
     [(regexp-match #rx"(?<=.)(?=')" s1) (set! s1 (string-append s1 "</span>"))]
-    [(regexp-match #rx"'.*'" s1)
-     (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
-    [(regexp-match #rx"\\]|\\[|[(]|[)]|[{]|[}]" s1)
-     (set! s1 (string-append "<span style=\"color: #666666;\">" s1 "</span>"))]
-    [(regexp-match #rx"[,]" s1)
-     (set! s1 (string-append "<span style=\"color: #666666;\">" s1 "</span>"))]
+    [(regexp-match #rx"'.*'" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
+    [(regexp-match #rx"\\]|\\[|[(]|[)]|[{]|[}]" s1) (set! s1 (string-append "<span style=\"color: #FE591A;\">" s1 "</span>"))]
+    [(regexp-match #rx"^default$|^case$|^break$|^print$" s1) (set! s1 (string-append "<span style=\"color: #F93B08;\">" s1 "</span>"))]
+    [(regexp-match #rx"^printf$" s1) (set! s1 (string-append "<span style=\"color: #3E7900;\">" s1 "</span>"))]
+    [(regexp-match #rx"[,]" s1) (set! s1 (string-append "<span style=\"color: #666666;\">" s1 "</span>"))]
     [(regexp-match #rx" " s1) (set! s1 "&nbsp;")]
-    [(regexp-match #rx"(\r\n)" s1) (set! s1 "<br>")])
+    [(regexp-match #rx"(\r\n|\n)" s1) (set! s1 "<br>")]  ; Manejar tanto \r\n como \n
+    [else s1])  ; Devolver s1 sin cambios si no coincide con ninguna regla
   s1)
 
 (define (resaltar2 x)

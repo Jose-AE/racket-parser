@@ -1,1 +1,0 @@
-int main() {     float y;     y=10.0; }
