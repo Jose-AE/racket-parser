@@ -18,6 +18,7 @@ export default function Component() {
       })
       .catch((err) => {
         console.log(err);
+        setParsedCodeHtml(`<span>Syntax incorecto</span>`);
       });
   };
 
@@ -44,10 +45,10 @@ export default function Component() {
             className="rounded-lg"
           />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: parsedCodeHtml }} className="text-slate-950 w-1/2 scrol overflow-y-auto p-2 bg-[rgb(232,229,229)] rounded-lg">
-       
-
-        </div>
+        <div
+          dangerouslySetInnerHTML={{ __html: parsedCodeHtml }}
+          className="text-slate-950 w-1/2 scrol overflow-y-auto p-2 bg-[rgb(232,229,229)] rounded-lg"
+        ></div>
       </div>
     </div>
   );

@@ -1,4 +1,1 @@
-int main() {
-    float y;
-    y=10.0;
-}
+int main() {     float y;     y=10.0; }
