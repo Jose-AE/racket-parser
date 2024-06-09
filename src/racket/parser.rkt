@@ -1,5 +1,8 @@
 #lang racket
-
+;José Antonio Pacheco Chargoy - A01663815
+;Eashley Brittney Martínez Vergara - A01663894
+;Jose Luis Almeida Esparza - A01028493
+;Carlos Alberto Páez de la Cruz - A01703050
 (require racket/runtime-path)
 
 ; Define the relative path to the file
@@ -135,11 +138,11 @@
   
 (define (surroundRegexp s1)
   (cond
-    [(regexp-match #rx"[0-9]+|^int$" s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
+    [(regexp-match #rx"[0-9]+" s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
+    [(regexp-match #rx"^int$|^char$|^float$|^double$|^void$" s1) (set! s1 (string-append "<span style=\"color: #000CFF;\">" s1 "</span>"))]
     [(regexp-match #rx"\\." s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
     [(regexp-match #rx"[><*=/+-]" s1) (set! s1 (string-append "<span style=\"color: #ff7f00;\">" s1 "</span>"))]
-    [(regexp-match #rx"^else$|^if$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
-    [(regexp-match #rx"^for$|^while$|^switch$|^do$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
+    [(regexp-match #rx"^for$|^while$|^switch$|^do$|^default$|^case$|^break$|^else$|^if$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
     [(regexp-match #rx"\".*\"" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
     [(regexp-match #rx"(?<=\")(?=.)" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
     [(regexp-match #rx"(?<=.)(?=\")" s1) (set! s1 (string-append s1 "</span>"))]
@@ -147,8 +150,7 @@
     [(regexp-match #rx"(?<=.)(?=')" s1) (set! s1 (string-append s1 "</span>"))]
     [(regexp-match #rx"'.*'" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
     [(regexp-match #rx"\\]|\\[|[(]|[)]|[{]|[}]" s1) (set! s1 (string-append "<span style=\"color: #FE591A;\">" s1 "</span>"))]
-    [(regexp-match #rx"^default$|^case$|^break$|^print$" s1) (set! s1 (string-append "<span style=\"color: #F93B08;\">" s1 "</span>"))]
-    [(regexp-match #rx"^printf$" s1) (set! s1 (string-append "<span style=\"color: #3E7900;\">" s1 "</span>"))]
+    [(regexp-match #rx"^printf$|^main$" s1) (set! s1 (string-append "<span style=\"color: #E5B620;\">" s1 "</span>"))]
     [(regexp-match #rx"[,]" s1) (set! s1 (string-append "<span style=\"color: #666666;\">" s1 "</span>"))]
     [(regexp-match #rx" " s1) (set! s1 "&nbsp;")]
     [(regexp-match #rx"(\r\n|\n)" s1) (set! s1 "<br>")]  ; Manejar tanto \r\n como \n
@@ -197,4 +199,13 @@
   
   (append-parse-result highlighted-code result))
 
-(main)
+;; Measure the time taken by the main function
+(define (measure-time proc)
+  (define start-time (current-inexact-milliseconds))
+  (define result (proc))
+  (define end-time (current-inexact-milliseconds))
+  (define duration (- end-time start-time))
+  (printf "Time taken: ~a ms\n" duration)
+  result)
+
+(measure-time main)

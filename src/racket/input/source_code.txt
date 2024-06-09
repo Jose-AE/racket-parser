@@ -1,1 +1,126 @@
-int main(){
+int main() {
+    int hours = 40;
+
+    switch (hours) {
+    case 50:
+        printf("Overtime");
+        break;
+    case 40:
+        printf("Full time");
+        break;
+    default:
+        printf("Part time");
+    }
+
+    while (hours < 45) {
+        printf("Hours");
+        hours++;
+    }
+
+    do {
+        printf("Hours");
+        hours++;
+    } while (hours < 50);
+
+    if (hours >= 50) {
+        printf("Hours are greater than or equal to 50");
+    }
+
+    int count = 0;
+    while (count < 3) {
+        printf("Count");
+        count++;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        printf("i");
+    }
+
+    int a = 0;
+    while (a < 5) {
+        if (a == 2) {
+            a++;
+            continue;
+        }
+        printf("a");
+        a++;
+    }
+
+    int b = 0;
+    do {
+        if (b == 1) {
+            b++;
+            continue;
+        }
+        printf("b");
+        b++;
+    } while (b < 5);
+
+    int x = 0;
+    while (x < 6) {
+        printf("x");
+        x++;
+    }
+
+    for (int y = 0; y < 6; y++) {
+        printf("y");
+    }
+
+    int z = 0;
+    while (z < 7) {
+        printf("z");
+        z++;
+    }
+
+    for (int m = 0; m < 7; m++) {
+        printf("m");
+    }
+
+    int n = 0;
+    while (n < 8) {
+        printf("n");
+        n++;
+    }
+
+    for (int p = 0; p < 8; p++) {
+        printf("p");
+    }
+
+    int q = 0;
+    while (q < 9) {
+        printf("q");
+        q++;
+    }
+
+    for (int r = 0; r < 9; r++) {
+        printf("r");
+    }
+
+    int s = 0;
+    while (s < 10) {
+        printf("s");
+        s++;
+    }
+
+    int t = 0;
+    while (t < 10) {
+        printf("t");
+        t++;
+    }
+
+    for (int u = 0; u < 10; u++) {
+        printf("u");
+    }
+
+    int v = 0;
+    while (v < 11) {
+        printf("v");
+        v++;
+    }
+
+    for (int w = 0; w < 11; w++) {
+        printf("w");
+    }
+
+    return 0;
+}

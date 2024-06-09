@@ -1,4 +1,9 @@
 #lang racket
+;José Antonio Pacheco Chargoy - A01663815
+;Eashley Brittney Martínez Vergara - A01663894
+;Jose Luis Almeida Esparza - A01028493
+;Carlos Alberto Páez de la Cruz - A01703050
+
 (require parser-tools/lex)
 (require (prefix-in : parser-tools/lex-sre))
 
