@@ -1,0 +1,31 @@
+/* output/styles.css */
+.keyword {
+    color: #a020f0;
+  }
+  .type {
+      color: #0033ff;
+  }
+  .operator {
+    color: #ff7f00;
+  }
+  .punctuation {
+    color: #FF0000;
+  }
+  .literal {
+    color: #00a86b;
+  }
+  .number {
+      color: #50b6ff;
+  }
+  .function {
+    color: #b9be1b;
+  }
+  .comment {
+    color: #666666;
+  }
+  .space {
+    white-space: pre;
+  }
+  .newline {
+    display: block;
+  }

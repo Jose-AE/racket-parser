@@ -6,6 +6,7 @@
 (define-runtime-path source-code-file-path "input/source_code.txt")
 (define-runtime-path parsed-code-file-path "output/parsed_code.html")
 
+
 (require "lexer.rkt")
 
 (require parser-tools/yacc)
@@ -21,7 +22,10 @@
 
 (define error-handler
   (lambda (tok-ok? tok-name tok-value start-pos end-pos)
-    (void)))  ; No hacer nada, solo retornar un valor vacío
+    (printf "Sintaxis incorrecta")
+    (printf "\n\n\nError: Invalid token detected: ~a, Value: ~a\n\n\n\n" tok-name tok-value)
+    ;(printf "Start position: ~a, End position: ~a\n" start-pos end-pos)
+    ))
 
 (define the-parser
   (parser [start c-program]
@@ -132,26 +136,27 @@
 
 (define (sep str)
   (regexp-split #rx"(?<=\\]|\\[|(\r\n)|[+-/()<>{}=;: ])|(?=\\]|\\[|(\r\n)|[+-/()<>{}=;: ])" str))
-  
+
 (define (surroundRegexp s1)
   (cond
-    [(regexp-match #rx"[0-9]+|^int$" s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
-    [(regexp-match #rx"\\." s1) (set! s1 (string-append "<span style=\"color: #0077cc;\">" s1 "</span>"))]
-    [(regexp-match #rx"[><*=/+-]" s1) (set! s1 (string-append "<span style=\"color: #ff7f00;\">" s1 "</span>"))]
-    [(regexp-match #rx"^else$|^if$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
-    [(regexp-match #rx"^for$|^while$|^switch$|^do$" s1) (set! s1 (string-append "<span style=\"color: #a020f0;\">" s1 "</span>"))]
-    [(regexp-match #rx"\".*\"" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
-    [(regexp-match #rx"(?<=\")(?=.)" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
+    [(regexp-match #rx"[0-9]+" s1) (set! s1 (string-append "<span class=\"number\">" s1 "</span>"))]
+    [(regexp-match #rx"^int$|^char$|^double$|^void$" s1) (set! s1 (string-append "<span class=\"type\">" s1 "</span>"))]
+    [(regexp-match #rx"\\." s1) (set! s1 (string-append "<span class=\"number\">" s1 "</span>"))]
+    [(regexp-match #rx"[><*=/+-]" s1) (set! s1 (string-append "<span class=\"operator\">" s1 "</span>"))]
+    [(regexp-match #rx"^else$|^if$" s1) (set! s1 (string-append "<span class=\"keyword\">" s1 "</span>"))]
+    [(regexp-match #rx"^for$|^while$|^switch$|^do|^case$|^default$|^break$" s1) (set! s1 (string-append "<span class=\"keyword\">" s1 "</span>"))]
+    [(regexp-match #rx"\".*\"" s1) (set! s1 (string-append "<span class=\"literal\">" s1 "</span>"))]
+    [(regexp-match #rx"(?<=\")(?=.)" s1) (set! s1 (string-append "<span class=\"literal\">" s1))]
     [(regexp-match #rx"(?<=.)(?=\")" s1) (set! s1 (string-append s1 "</span>"))]
-    [(regexp-match #rx"(?<=')(?=.)" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1))]
+    [(regexp-match #rx"(?<=')(?=.)" s1) (set! s1 (string-append "<span class=\"literal\">" s1))]
     [(regexp-match #rx"(?<=.)(?=')" s1) (set! s1 (string-append s1 "</span>"))]
-    [(regexp-match #rx"'.*'" s1) (set! s1 (string-append "<span style=\"color: #00a86b;\">" s1 "</span>"))]
-    [(regexp-match #rx"\\]|\\[|[(]|[)]|[{]|[}]" s1) (set! s1 (string-append "<span style=\"color: #FE591A;\">" s1 "</span>"))]
-    [(regexp-match #rx"^default$|^case$|^break$|^print$" s1) (set! s1 (string-append "<span style=\"color: #F93B08;\">" s1 "</span>"))]
-    [(regexp-match #rx"^printf$" s1) (set! s1 (string-append "<span style=\"color: #3E7900;\">" s1 "</span>"))]
-    [(regexp-match #rx"[,]" s1) (set! s1 (string-append "<span style=\"color: #666666;\">" s1 "</span>"))]
+    [(regexp-match #rx"'.*'" s1) (set! s1 (string-append "<span class=\"literal\">" s1 "</span>"))]
+    [(regexp-match #rx"\\]|\\[|[(]|[)]|[{]|[}]|[;]" s1) (set! s1 (string-append "<span class=\"punctuation\">" s1 "</span>"))]
+    [(regexp-match #rx"^printf$|^main$" s1) (set! s1 (string-append "<span class=\"function\">" s1 "</span>"))]
+    [(regexp-match #rx"[,]" s1) (set! s1 (string-append "<span class=\"comma\">" s1 "</span>"))]
     [(regexp-match #rx" " s1) (set! s1 "&nbsp;")]
-    [(regexp-match #rx"(\r\n|\n)" s1) (set! s1 "<br>")]  ; Manejar tanto \r\n como \n
+    [(regexp-match #rx"\r\n" s1) (set! s1 "<br>")]
+    [(regexp-match #rx"\n" s1) (set! s1 "<br>")]
     [else s1])  ; Devolver s1 sin cambios si no coincide con ninguna regla
   s1)
 
@@ -159,42 +164,26 @@
   (set! x (sep x))
   (set! x (map (lambda (lst) (surroundRegexp lst)) x))
   (set! x (string-join x ""))
-  (set! x (string-append "<pre style=\"background-color: #f4f4f4; padding: 10px;\">" x "</pre>"))
+  (set! x
+        (string-append " "
+                       x
+                       " "))
   x)
 
-(define (resultado x)
-  (resaltar2 x))
+(define (res ruta string)
+  (call-with-output-file ruta (lambda (port) (display string port)) #:exists 'replace))
 
-(define (append-parse-result highlighted-code result)
-  (define status (if (eq? result 'parse-error) "Sintaxis Incorrecta" "Sintaxis Correcta"))
-  (define status-html
-    (string-append
-     "<div style=\"background-color: black; color: white; padding: 10px; margin-top: 20px; font-weight: bold;\">"
-     status
-     "</div>"))
-  
-  (define full-html
-    (string-append
-     "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Código Resaltado</title>\n</head>\n<body>\n"
-     highlighted-code
-     status-html
-     "\n</body>\n</html>"))
-  
-  (call-with-output-file parsed-code-file-path
-    (lambda (port)
-      (display full-html port))
-    #:exists 'replace))
+(define (resultado x)
+  (define html-content (string-append "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\"></head><body>" (resaltar2 x) "</body></html>"))
+  (res parsed-code-file-path html-content))
+
 
 ;; Main function to parse the source code and generate highlighted HTML
 (define (main)
-  (define src-code-string (file->string source-code-file-path))
-  (define highlighted-code (resultado src-code-string))
-  
-  (define src-code (open-input-string src-code-string))
+  (define src-code (open-input-file source-code-file-path))
   (port-count-lines! src-code)
-  (define result (with-handlers ([exn:fail? (lambda (e) 'parse-error)])
-                   (the-parser (λ () (lex src-code)))))
-  
-  (append-parse-result highlighted-code result))
+  (define result (the-parser (λ () (lex src-code))))
+  (resultado (file->string source-code-file-path))
+  (display result))
 
 (main)
