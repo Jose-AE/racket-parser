@@ -2,7 +2,7 @@
 <h1 align="center">Racker Parser</h1>
 
 <h2>About</h2>
-WIP
+Racket C code parser
 
 <h2>Installation</h2>
 
@@ -32,17 +32,14 @@ Make sure you have the following prerequisites installed on your system:
    Use Docker Compose to spin up the necessary container:
 
    ```bash
-   docker-compose up
+   docker compose up
    ```
 
 4. **Access Webapp**
 
-   Once the containers are up and running, you can access the application at:
+   Once the container is up and running, you can access the application at:
 
    [http://localhost:3000](http://localhost:3000)
-
-<h2>Credits</h2>
-WIP
 
 <h2>Copyright</h2>
 This project is licensed under the terms of the GNU General Public v3.0 License. See <a href="LICENSE">license</a>
